@@ -95,17 +95,7 @@ const HamburgerMenu = () => {
       </button>
 
       {isOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: '390px',
-          height: '100%',
-          zIndex: 1000,
-          pointerEvents: 'none'
-        }}>
+        <>
           {/* Backdrop (Full Screen) */}
           <div 
             onClick={() => {
@@ -120,7 +110,7 @@ const HamburgerMenu = () => {
               height: '100vh',
               background: 'rgba(0,0,0,0.4)',
               backdropFilter: 'blur(4px)',
-              pointerEvents: 'auto',
+              zIndex: 1000,
               animation: 'fadeIn 0.2s ease-out'
             }}
           />
@@ -128,14 +118,14 @@ const HamburgerMenu = () => {
           {/* Drawer */}
           <div 
             style={{
-              position: 'absolute',
+              position: 'fixed',
               top: 0,
-              right: 0,
+              right: 'max(0px, calc(50vw - 195px))',
               width: '85%',
               maxWidth: '380px',
-              height: '100%',
+              height: '100vh',
               background: 'white',
-              pointerEvents: 'auto',
+              zIndex: 1001,
               boxShadow: '-4px 0 24px rgba(0,0,0,0.1)',
               animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
               display: 'flex',
@@ -189,7 +179,7 @@ const HamburgerMenu = () => {
               </>
             )}
           </div>
-        </div>
+        </>
       )}
       
       <style>{`
