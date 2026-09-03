@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Bookmark } from 'lucide-react';
+import { ChevronLeft, Share } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const ProductDetailView = () => {
@@ -25,8 +25,11 @@ const ProductDetailView = () => {
         <button onClick={() => navigate(-1)} className="header-btn">
           <ChevronLeft size={24} strokeWidth={2.5} color="var(--text-primary)" />
         </button>
-        <button className="header-btn">
-          <Bookmark size={22} strokeWidth={2.5} color="var(--text-primary)" />
+        <button className="header-btn" onClick={() => {
+          const text = `Cek produk keren ini: ${product.name} (Rp${product.price.toLocaleString('id-ID')})\n\nLihat selengkapnya di sini: ${window.location.href}`;
+          window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }}>
+          <Share size={22} strokeWidth={2.5} color="var(--text-primary)" />
         </button>
       </header>
 
