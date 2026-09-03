@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Bookmark } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
@@ -6,9 +6,16 @@ import { useAppContext } from '../context/AppContext';
 const ProductDetailView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getProductById } = useAppContext();
+  const { getProductById, addToCart } = useAppContext();
   
   const product = getProductById(id);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(product, product.sizeCategory || 'All Size', 1);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
+  };
 
   if (!product) return <div>Product not found</div>;
 
@@ -69,8 +76,12 @@ const ProductDetailView = () => {
       </div>
 
       <div className="pdp-footer animate-fade-up">
-        <button className="btn-primary">
-          JOIN PREORDER
+        <button 
+          className="btn-primary" 
+          onClick={handleAddToCart}
+          style={{ background: isAdded ? '#4BB543' : '' }}
+        >
+          {isAdded ? 'ADDED TO CART!' : 'ADD TO CART'}
         </button>
       </div>
     </div>

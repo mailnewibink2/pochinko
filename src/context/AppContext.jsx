@@ -127,6 +127,48 @@ export const AppProvider = ({ children }) => {
     setIsAdminAuthenticated(false);
   };
 
+  // Cart Management
+  const [cart, setCart] = useState(() => {
+    const saved = localStorage.getItem('pochinko_cart');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pochinko_cart', JSON.stringify(cart));
+  }, [cart]);
+
+  const addToCart = (product, size = null, quantity = 1) => {
+    setCart(prev => {
+      const existingItem = prev.find(item => item.product.id === product.id && item.size === size);
+      if (existingItem) {
+        return prev.map(item => 
+          item.product.id === product.id && item.size === size
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { product, size, quantity }];
+    });
+  };
+
+  const removeFromCart = (productId, size) => {
+    setCart(prev => prev.filter(item => !(item.product.id === productId && item.size === size)));
+  };
+
+  const updateCartQuantity = (productId, size, quantity) => {
+    if (quantity <= 0) {
+      removeFromCart(productId, size);
+      return;
+    }
+    setCart(prev => prev.map(item => 
+      item.product.id === productId && item.size === size
+        ? { ...item, quantity }
+        : item
+    ));
+  };
+
+  const clearCart = () => setCart([]);
+
   return (
     <AppContext.Provider value={{ 
       products, 
@@ -138,7 +180,12 @@ export const AppProvider = ({ children }) => {
       loading,
       isAdminAuthenticated,
       loginAdmin,
-      logoutAdmin
+      logoutAdmin,
+      cart,
+      addToCart,
+      removeFromCart,
+      updateCartQuantity,
+      clearCart
     }}>
       {children}
     </AppContext.Provider>

@@ -4,7 +4,7 @@ import HomeView from './views/HomeView';
 import ProductDetailView from './views/ProductDetailView';
 import SearchView from './views/SearchView';
 import WishlistView from './views/WishlistView';
-import OrdersView from './views/OrdersView';
+import CartView from './views/CartView';
 
 // Admin Views
 import AdminLayout from './layouts/AdminLayout';
@@ -73,7 +73,7 @@ function App() {
               <Route path="product/:id" element={<ProductDetailView />} />
               <Route path="search" element={<SearchView />} />
               <Route path="wishlist" element={<WishlistView />} />
-              <Route path="orders" element={<OrdersView />} />
+              <Route path="cart" element={<CartView />} />
             </Route>
 
             {/* Admin Routes (Desktop Dashboard) */}

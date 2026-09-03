@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Send, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Send, ShoppingBag, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 
 const FeedCard = ({ product }) => {
   const navigate = useNavigate();
   const carouselRef = useRef(null);
+  const { addToCart } = useAppContext();
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [isAdded, setIsAdded] = useState(false);
 
   const handleShareWA = (e) => {
     e.stopPropagation();
@@ -15,13 +18,14 @@ const FeedCard = ({ product }) => {
 
   const handleLove = (e) => {
     e.stopPropagation();
-    // Add logic to save item
     alert('Added to Wishlist!');
   };
 
-  const handleJoinPO = (e) => {
+  const handleAddToCart = (e) => {
     e.stopPropagation();
-    navigate(`/product/${product.id}`);
+    addToCart(product, product.sizeCategory || 'All Size', 1);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   const handleScroll = () => {
@@ -133,9 +137,16 @@ const FeedCard = ({ product }) => {
           </button>
         </div>
         
-        <button className="btn-join-po" onClick={handleJoinPO}>
-          <Plus size={16} strokeWidth={3} style={{ marginRight: '4px' }} />
-          JOIN PO
+        <button 
+          className="btn-join-po" 
+          onClick={handleAddToCart}
+          style={{ background: isAdded ? '#4BB543' : '', color: isAdded ? 'white' : '' }}
+        >
+          {isAdded ? (
+            <><Check size={16} strokeWidth={3} style={{ marginRight: '4px' }} /> ADDED</>
+          ) : (
+            <><ShoppingBag size={16} strokeWidth={2.5} style={{ marginRight: '4px' }} /> ADD TO CART</>
+          )}
         </button>
       </div>
       
