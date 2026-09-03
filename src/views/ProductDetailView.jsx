@@ -85,7 +85,7 @@ const ProductDetailView = () => {
         </div>
       </div>
 
-      <div className="pdp-footer animate-fade-up">
+      <div className="pdp-footer">
         <button 
           className="btn-primary" 
           onClick={handleAddToCart}
