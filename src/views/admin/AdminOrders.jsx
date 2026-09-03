@@ -29,6 +29,24 @@ const AdminOrders = () => {
     }
   };
 
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+        
+      if (error) throw error;
+      
+      setOrders(prev => prev.map(order => 
+        order.id === orderId ? { ...order, status: newStatus } : order
+      ));
+    } catch (err) {
+      console.error('Error updating order status:', err);
+      alert('Gagal mengupdate status pesanan.');
+    }
+  };
+
   const handleWA = (phone) => {
     let cleanPhone = phone.replace(/\D/g, '');
     if (cleanPhone.startsWith('0')) {
@@ -138,9 +156,25 @@ const AdminOrders = () => {
                       Rp{order.total_amount.toLocaleString('id-ID')}
                     </td>
                     <td style={{ padding: '16px 24px' }}>
-                      <span className={`badge ${order.status === 'pending_payment' ? 'badge-gray' : 'badge-green'}`}>
-                        {order.status === 'pending_payment' ? 'Pending' : order.status}
-                      </span>
+                      <select 
+                        value={order.status}
+                        onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #f0eef5',
+                          background: order.status === 'paid_in_full' ? '#E8F5E9' : order.status === 'dp_paid' ? '#FFF3E0' : '#f0eef5',
+                          color: order.status === 'paid_in_full' ? '#2E7D32' : order.status === 'dp_paid' ? '#E65100' : '#878294',
+                          fontWeight: 600,
+                          fontSize: '12px',
+                          outline: 'none',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="pending_payment">Pending</option>
+                        <option value="dp_paid">Sudah DP</option>
+                        <option value="paid_in_full">Lunas</option>
+                      </select>
                     </td>
                     <td style={{ padding: '16px 24px' }}>
                       <button onClick={() => handleWA(order.customer_phone)} style={{ background: '#E8F5E9', border: 'none', padding: '6px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', color: '#2E7D32', cursor: 'pointer', fontWeight: 600, fontSize: '12px' }}>
