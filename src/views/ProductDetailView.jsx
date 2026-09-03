@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Share } from 'lucide-react';
+import { ChevronLeft, Share, Heart } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const ProductDetailView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getProductById, addToCart } = useAppContext();
+  const { getProductById, addToCart, wishlist, toggleWishlist } = useAppContext();
   
   const product = getProductById(id);
   const [isAdded, setIsAdded] = useState(false);
@@ -19,18 +19,25 @@ const ProductDetailView = () => {
 
   if (!product) return <div>Product not found</div>;
 
+  const isFavorited = wishlist.some(item => item.id === product.id);
+
   return (
     <div className="pdp-container animate-fade-up">
       <header className="pdp-header">
         <button onClick={() => navigate(-1)} className="header-btn">
           <ChevronLeft size={24} strokeWidth={2.5} color="var(--text-primary)" />
         </button>
-        <button className="header-btn" onClick={() => {
-          const text = `Cek produk keren ini: ${product.name} (Rp${product.price.toLocaleString('id-ID')})\n\nLihat selengkapnya di sini: ${window.location.href}`;
-          window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }}>
-          <Share size={22} strokeWidth={2.5} color="var(--text-primary)" />
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="header-btn" onClick={() => toggleWishlist(product)}>
+            <Heart size={22} strokeWidth={2.5} fill={isFavorited ? '#FF4B4B' : 'none'} color={isFavorited ? '#FF4B4B' : 'var(--text-primary)'} />
+          </button>
+          <button className="header-btn" onClick={() => {
+            const text = `Mau ikutan PO Impor tas lucu ini ${product.name} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.href}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+          }}>
+            <Share size={22} strokeWidth={2.5} color="var(--text-primary)" />
+          </button>
+        </div>
       </header>
 
       <div className="pdp-gallery">

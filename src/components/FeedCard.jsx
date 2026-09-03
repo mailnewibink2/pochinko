@@ -6,19 +6,20 @@ import { useAppContext } from '../context/AppContext';
 const FeedCard = ({ product }) => {
   const navigate = useNavigate();
   const carouselRef = useRef(null);
-  const { addToCart } = useAppContext();
+  const { addToCart, wishlist, toggleWishlist } = useAppContext();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
+  const isFavorited = wishlist.some(item => item.id === product.id);
 
   const handleShareWA = (e) => {
     e.stopPropagation();
-    const text = `Check out this preorder: ${product.name} - Rp${product.price.toLocaleString('id-ID')}`;
+    const text = `Mau ikutan PO Impor tas lucu ini ${product.name} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.origin}/product/${product.id}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleLove = (e) => {
     e.stopPropagation();
-    alert('Added to Wishlist!');
+    toggleWishlist(product);
   };
 
   const handleAddToCart = (e) => {
@@ -130,7 +131,7 @@ const FeedCard = ({ product }) => {
       <div className="card-actions">
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <button className="icon-btn" onClick={handleLove}>
-            <Heart size={24} strokeWidth={1.5} color="var(--text-primary)" />
+            <Heart size={24} strokeWidth={1.5} fill={isFavorited ? '#FF4B4B' : 'none'} color={isFavorited ? '#FF4B4B' : 'var(--text-primary)'} />
           </button>
           <button className="icon-btn" onClick={handleShareWA}>
             <Send size={22} strokeWidth={1.5} color="var(--text-primary)" />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LayoutGrid, Rows, ChevronDown, ChevronUp } from 'lucide-react';
 import FeedCard from '../components/FeedCard';
+import HamburgerMenu from '../components/HamburgerMenu';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
@@ -43,12 +44,15 @@ const HomeView = () => {
     <div style={{ paddingBottom: '20px' }}>
       <header className="feed-header">
         <h1>Pochinko</h1>
-        <button 
-          onClick={() => setViewMode(viewMode === 'feed' ? 'grid' : 'feed')}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-        >
-          {viewMode === 'feed' ? <LayoutGrid size={24} strokeWidth={2} color="var(--primary)" /> : <Rows size={24} strokeWidth={2} color="var(--primary)" />}
-        </button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button 
+            onClick={() => setViewMode(viewMode === 'feed' ? 'grid' : 'feed')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          >
+            {viewMode === 'feed' ? <LayoutGrid size={24} strokeWidth={2} color="var(--primary)" /> : <Rows size={24} strokeWidth={2} color="var(--primary)" />}
+          </button>
+          <HamburgerMenu />
+        </div>
       </header>
 
       {/* Highlights / Categories (Instagram Style) */}

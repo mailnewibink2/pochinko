@@ -167,7 +167,25 @@ export const AppProvider = ({ children }) => {
     ));
   };
 
-  const clearCart = () => setCart([]);
+  // Wishlist Management
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem('pochinko_wishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pochinko_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const toggleWishlist = (product) => {
+    setWishlist(prev => {
+      const exists = prev.find(item => item.id === product.id);
+      if (exists) {
+        return prev.filter(item => item.id !== product.id);
+      }
+      return [...prev, product];
+    });
+  };
 
   return (
     <AppContext.Provider value={{ 
@@ -185,7 +203,9 @@ export const AppProvider = ({ children }) => {
       addToCart,
       removeFromCart,
       updateCartQuantity,
-      clearCart
+      clearCart,
+      wishlist,
+      toggleWishlist
     }}>
       {children}
     </AppContext.Provider>
