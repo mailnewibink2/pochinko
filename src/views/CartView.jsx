@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { ShoppingBag, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { supabase } from '../lib/supabase';
 
 const CartView = () => {
-  const { cart, updateCartQuantity, removeFromCart, clearCart } = useAppContext();
-  const [formData, setFormData] = useState({ name: '', phone: '', email: '', address: '' });
+  const { cart, removeFromCart, updateCartQuantity, clearCart, updateProduct } = useAppContext();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    address: ''
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -13,6 +22,11 @@ const CartView = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name || !formData.phone || !formData.address) {
+      setErrorMsg('Mohon lengkapi Nama, No WA, dan Alamat');
+      return;
+    }
+    
     if (cart.length === 0) {
       setErrorMsg('Keranjang belanja kosong.');
       return;
@@ -37,6 +51,19 @@ const CartView = () => {
         .insert([orderData]);
         
       if (error) throw error;
+      
+      // Update joinedCount for each product in the cart
+      for (const item of cart) {
+        if (item.product) {
+          const currentJoined = item.product.preorderInfo?.joinedCount || 0;
+          const newPreorderInfo = {
+            ...(item.product.preorderInfo || {}),
+            joinedCount: currentJoined + item.quantity
+          };
+          // Fire and forget, don't wait for it to complete
+          updateProduct(item.product.id, { preorderInfo: newPreorderInfo });
+        }
+      }
       
       // Generate WA message
       let text = `Halo Admin, saya ingin Checkout PO:\n\n`;
