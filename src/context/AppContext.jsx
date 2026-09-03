@@ -104,6 +104,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const getProductById = (id) => {
+    return products.find(p => p.id === id);
+  };
+
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     return sessionStorage.getItem('pochinko_admin_auth') === 'true';
   });
