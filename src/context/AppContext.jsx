@@ -167,6 +167,10 @@ export const AppProvider = ({ children }) => {
     ));
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   // Wishlist Management
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem('pochinko_wishlist');
