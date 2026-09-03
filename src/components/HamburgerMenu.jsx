@@ -95,7 +95,17 @@ const HamburgerMenu = () => {
       </button>
 
       {isOpen && (
-        <>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 1000,
+          pointerEvents: 'none',
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
           {/* Backdrop (Full Screen) */}
           <div 
             onClick={() => {
@@ -103,37 +113,44 @@ const HamburgerMenu = () => {
               setActiveModal(null);
             }}
             style={{
-              position: 'fixed',
+              position: 'absolute',
               top: 0,
               left: 0,
-              width: '100vw',
-              height: '100vh',
+              width: '100%',
+              height: '100%',
               background: 'rgba(0,0,0,0.4)',
               backdropFilter: 'blur(4px)',
-              zIndex: 1000,
+              pointerEvents: 'auto',
               animation: 'fadeIn 0.2s ease-out'
             }}
           />
           
-          {/* Drawer */}
-          <div 
-            style={{
-              position: 'fixed',
-              top: 0,
-              right: 'max(0px, calc(50vw - 195px))',
-              width: '85%',
-              maxWidth: '380px',
-              height: '100vh',
-              background: 'white',
-              zIndex: 1001,
-              boxShadow: '-4px 0 24px rgba(0,0,0,0.1)',
-              animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden'
-            }}
-          >
-            {activeModal === 'howToOrder' ? renderHowToOrder() : (
+          {/* App Constrained Container */}
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            maxWidth: '390px',
+            height: '100%'
+          }}>
+            {/* Drawer */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '85%',
+                maxWidth: '380px',
+                height: '100%',
+                background: 'white',
+                pointerEvents: 'auto',
+                boxShadow: '-4px 0 24px rgba(0,0,0,0.1)',
+                animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}
+            >
+              {activeModal === 'howToOrder' ? renderHowToOrder() : (
               <>
                 <div style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
                   <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800 }}>Menu</h2>
@@ -178,8 +195,9 @@ const HamburgerMenu = () => {
                 </div>
               </>
             )}
+            </div>
           </div>
-        </>
+        </div>
       )}
       
       <style>{`
