@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, X, Info, HelpCircle, Phone, ArrowLeft } from 'lucide-react';
 
 const HamburgerMenu = () => {
@@ -94,7 +95,7 @@ const HamburgerMenu = () => {
         <Menu size={24} strokeWidth={2} color="var(--primary)" />
       </button>
 
-      {isOpen && (
+      {isOpen && createPortal(
         <div style={{
           position: 'fixed',
           top: 0,
@@ -201,8 +202,8 @@ const HamburgerMenu = () => {
             </div>
           </div>
         </div>
+        , document.body
       )}
-      
       <style>{`
         @keyframes slideInRight {
           from { transform: translateX(100%); }
