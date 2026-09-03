@@ -27,32 +27,68 @@ const ClientLayout = () => {
   );
 };
 
+import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '40px 20px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '12px' }}>Terjadi Kesalahan (Runtime Error)</h2>
+          <pre style={{ background: '#fff0f0', color: '#ff4d4f', padding: '16px', borderRadius: '12px', textAlign: 'left', overflowX: 'auto', fontSize: '13px', marginBottom: '20px' }}>
+            {this.state.error?.toString()}
+          </pre>
+          <button onClick={() => window.location.reload()} style={{ padding: '12px 24px', borderRadius: '12px', background: '#5700ff', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+            Coba Muat Ulang
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   return (
-    <AppProvider>
-      <Router>
-        <Routes>
-          {/* Client Routes (Mobile App) */}
-          <Route path="/" element={<ClientLayout />}>
-            <Route index element={<HomeView />} />
-            <Route path="product/:id" element={<ProductDetailView />} />
-            <Route path="search" element={<SearchView />} />
-            <Route path="wishlist" element={<WishlistView />} />
-            <Route path="orders" element={<OrdersView />} />
-          </Route>
+    <ErrorBoundary>
+      <AppProvider>
+        <Router>
+          <Routes>
+            {/* Client Routes (Mobile App) */}
+            <Route path="/" element={<ClientLayout />}>
+              <Route index element={<HomeView />} />
+              <Route path="product/:id" element={<ProductDetailView />} />
+              <Route path="search" element={<SearchView />} />
+              <Route path="wishlist" element={<WishlistView />} />
+              <Route path="orders" element={<OrdersView />} />
+            </Route>
 
-          {/* Admin Routes (Desktop Dashboard) */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="products/new" element={<AdminProductEditor />} />
-            <Route path="products/:id" element={<AdminProductEditor />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="settings" element={<AdminSettings />} />
-          </Route>
-        </Routes>
-      </Router>
-    </AppProvider>
+            {/* Admin Routes (Desktop Dashboard) */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/new" element={<AdminProductEditor />} />
+              <Route path="products/:id" element={<AdminProductEditor />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
 
