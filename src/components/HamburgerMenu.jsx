@@ -86,6 +86,48 @@ const HamburgerMenu = () => {
     </div>
   );
 
+  const renderAboutUs = () => (
+    <div style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: 'white',
+      zIndex: 10,
+      display: 'flex',
+      flexDirection: 'column',
+      animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+    }}>
+      <div style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '1px solid var(--border)' }}>
+        <button onClick={() => setActiveModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+          <ArrowLeft size={24} color="var(--text-primary)" />
+        </button>
+        <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800 }}>Tentang Kami</h2>
+      </div>
+      
+      <div style={{ padding: '24px', overflowY: 'auto', flex: 1, fontSize: '14px', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+        <h3 style={{ fontSize: '18px', color: 'var(--primary)', marginBottom: '16px', fontWeight: 800 }}>Tentang Pochinko</h3>
+        
+        <p style={{ marginBottom: '16px' }}>
+          Pochinko adalah platform Pre-Order (PO) yang menghadirkan produk fashion impor pilihan dari China dengan proses yang mudah, transparan, dan terpercaya.
+        </p>
+
+        <p style={{ marginBottom: '16px' }}>
+          Kami membantu Anda mendapatkan berbagai pilihan tas, sepatu, sandal, dan aksesoris berkualitas tanpa perlu repot mengurus proses impor, bea masuk, atau khawatir terhadap kualitas barang yang diterima.
+        </p>
+
+        <p style={{ marginBottom: '16px' }}>
+          Di Pochinko, kami percaya bahwa kualitas selalu menjadi prioritas. Karena itu, setiap produk yang tiba di gudang transit kami akan melalui proses Quality Control (QC) terlebih dahulu sebelum dikirim ke pelanggan di seluruh Indonesia.
+        </p>
+
+        <p style={{ marginBottom: '32px' }}>
+          Dengan sistem PO yang jelas, pembayaran yang transparan, dan komitmen terhadap kualitas, kami ingin membuat pengalaman belanja produk impor menjadi lebih aman, nyaman, dan menyenangkan.
+        </p>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <button 
@@ -154,7 +196,7 @@ const HamburgerMenu = () => {
                 overflow: 'hidden'
               }}
             >
-              {activeModal === 'howToOrder' ? renderHowToOrder() : (
+              {activeModal === 'howToOrder' ? renderHowToOrder() : activeModal === 'aboutUs' ? renderAboutUs() : (
               <>
                 <div style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
                   <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800 }}>Menu</h2>
@@ -166,9 +208,7 @@ const HamburgerMenu = () => {
                 <div style={{ padding: '16px 0', flex: 1, overflowY: 'auto' }}>
                   <div 
                     style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '1px solid #f0eef5', cursor: 'pointer' }}
-                    onClick={() => {
-                      alert('Tentang Kami akan segera hadir.');
-                    }}
+                    onClick={() => setActiveModal('aboutUs')}
                   >
                     <Info size={20} color="var(--primary)" />
                     <span style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Tentang Kami</span>
