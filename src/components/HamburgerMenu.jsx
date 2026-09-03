@@ -102,9 +102,7 @@ const HamburgerMenu = () => {
           width: '100%',
           height: '100%',
           zIndex: 1000,
-          pointerEvents: 'none',
-          display: 'flex',
-          justifyContent: 'center'
+          pointerEvents: 'none'
         }}>
           {/* Backdrop (Full Screen) */}
           <div 
@@ -127,10 +125,15 @@ const HamburgerMenu = () => {
           
           {/* App Constrained Container */}
           <div style={{
-            position: 'relative',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            margin: '0 auto',
             width: '100%',
             maxWidth: '390px',
-            height: '100%'
+            height: '100%',
+            pointerEvents: 'none'
           }}>
             {/* Drawer */}
             <div 
