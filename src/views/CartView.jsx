@@ -53,17 +53,19 @@ const CartView = () => {
       if (error) throw error;
       
       // Update joinedCount for each product in the cart
-      for (const item of cart) {
+      const updatePromises = cart.map(item => {
         if (item.product) {
           const currentJoined = item.product.preorderInfo?.joinedCount || 0;
           const newPreorderInfo = {
             ...(item.product.preorderInfo || {}),
             joinedCount: currentJoined + item.quantity
           };
-          // Fire and forget, don't wait for it to complete
-          updateProduct(item.product.id, { preorderInfo: newPreorderInfo });
+          return updateProduct(item.product.id, { preorderInfo: newPreorderInfo });
         }
-      }
+        return Promise.resolve();
+      });
+      
+      await Promise.all(updatePromises);
       
       // Generate WA message
       let text = `Halo Admin, saya ingin Checkout PO:\n\n`;
