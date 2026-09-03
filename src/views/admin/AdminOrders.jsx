@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase';
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -177,9 +178,14 @@ const AdminOrders = () => {
                       </select>
                     </td>
                     <td style={{ padding: '16px 24px' }}>
-                      <button onClick={() => handleWA(order.customer_phone)} style={{ background: '#E8F5E9', border: 'none', padding: '6px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', color: '#2E7D32', cursor: 'pointer', fontWeight: 600, fontSize: '12px' }}>
-                        <MessageCircle size={14} /> WhatsApp
-                      </button>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => setSelectedOrder(order)} style={{ background: '#f0eef5', border: 'none', padding: '6px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', color: '#2d2a36', cursor: 'pointer', fontWeight: 600, fontSize: '12px' }}>
+                          Detail
+                        </button>
+                        <button onClick={() => handleWA(order.customer_phone)} style={{ background: '#E8F5E9', border: 'none', padding: '6px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', color: '#2E7D32', cursor: 'pointer', fontWeight: 600, fontSize: '12px' }}>
+                          Chat WA
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -188,6 +194,78 @@ const AdminOrders = () => {
           </table>
         </div>
       </div>
+      
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+          background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }} onClick={() => setSelectedOrder(null)}>
+          <div style={{
+            background: 'white', borderRadius: '16px', padding: '32px',
+            width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto'
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 800 }}>Order Details</h2>
+              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '24px', lineHeight: 1 }}>&times;</button>
+            </div>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '14px', color: '#878294', marginBottom: '12px', textTransform: 'uppercase' }}>Customer Info</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', background: '#fdfcff', padding: '16px', borderRadius: '12px' }}>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#878294' }}>Name</div>
+                  <div style={{ fontWeight: 600 }}>{selectedOrder.customer_name}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#878294' }}>Phone / WA</div>
+                  <div style={{ fontWeight: 600 }}>{selectedOrder.customer_phone}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#878294' }}>Email</div>
+                  <div style={{ fontWeight: 600 }}>{selectedOrder.customer_email || '-'}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#878294' }}>Status</div>
+                  <div style={{ fontWeight: 600 }}>
+                    {selectedOrder.status === 'pending_payment' ? 'Pending' : selectedOrder.status === 'dp_paid' ? 'Sudah DP' : 'Lunas'}
+                  </div>
+                </div>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <div style={{ fontSize: '12px', color: '#878294' }}>Address</div>
+                  <div style={{ fontWeight: 600 }}>{selectedOrder.customer_address}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 style={{ fontSize: '14px', color: '#878294', marginBottom: '12px', textTransform: 'uppercase' }}>Items Ordered</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {selectedOrder.items.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #f0eef5', paddingBottom: '12px' }}>
+                    <img src={item.product.images[0]} alt={item.product.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: '14px' }}>{item.product.name}</div>
+                      <div style={{ fontSize: '12px', color: '#878294' }}>
+                        Size: {item.size || '-'} &bull; Qty: {item.quantity}
+                      </div>
+                      <div style={{ fontWeight: 600, fontSize: '14px', color: '#2d2a36', marginTop: '4px' }}>
+                        Rp{(item.product.price * item.quantity).toLocaleString('id-ID')}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px', paddingTop: '24px', borderTop: '2px dashed #f0eef5' }}>
+              <span style={{ fontWeight: 700, fontSize: '16px' }}>Total Amount</span>
+              <span style={{ fontWeight: 800, fontSize: '20px', color: 'var(--accent)' }}>Rp{selectedOrder.total_amount.toLocaleString('id-ID')}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
