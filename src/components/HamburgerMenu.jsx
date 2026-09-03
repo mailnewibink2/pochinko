@@ -98,24 +98,26 @@ const HamburgerMenu = () => {
         <div style={{
           position: 'fixed',
           top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: '390px',
+          height: '100%',
           zIndex: 1000,
           pointerEvents: 'none'
         }}>
-          {/* Backdrop */}
+          {/* Backdrop (Full Screen) */}
           <div 
             onClick={() => {
               setIsOpen(false);
               setActiveModal(null);
             }}
             style={{
-              position: 'absolute',
+              position: 'fixed',
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
+              width: '100vw',
+              height: '100vh',
               background: 'rgba(0,0,0,0.4)',
               backdropFilter: 'blur(4px)',
               pointerEvents: 'auto',
