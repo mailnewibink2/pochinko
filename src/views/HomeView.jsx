@@ -32,7 +32,7 @@ const HomeView = () => {
     });
 
   const highlights = [
-    { name: 'All Product', img: 'https://images.unsplash.com/photo-1555529733-0e67056058e1?w=150&h=150&fit=crop' },
+    { name: 'All Product', img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=150&h=150&fit=crop' },
     { name: 'Bags', img: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=150&h=150&fit=crop' },
     { name: 'Shoes', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=150&h=150&fit=crop' },
     { name: 'Accessories', img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=150&h=150&fit=crop' },
