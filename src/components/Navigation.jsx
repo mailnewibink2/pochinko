@@ -1,11 +1,16 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Search, Heart, ShoppingBag } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const Navigation = () => {
   const { cart } = useAppContext();
+  const location = useLocation();
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  if (location.pathname.includes('/product/')) {
+    return null;
+  }
 
   return (
     <nav className="bottom-nav">

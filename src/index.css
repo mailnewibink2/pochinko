@@ -427,10 +427,10 @@ h1, h2, h3, h4 {
 
 .pdp-footer {
   position: fixed;
-  bottom: 96px;
+  bottom: 24px;
   box-sizing: border-box;
-  width: calc(100% - 48px);
-  max-width: calc(390px - 48px);
+  width: calc(100% - 32px);
+  max-width: calc(390px - 32px);
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255,255,255,0.95);
