@@ -104,12 +104,38 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const getProductById = (id) => {
-    return products.find(p => p.id === id);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return sessionStorage.getItem('pochinko_admin_auth') === 'true';
+  });
+
+  const loginAdmin = (password) => {
+    const defaultPass = import.meta.env.VITE_ADMIN_PASSWORD || 'pochinko123';
+    if (password === defaultPass) {
+      sessionStorage.setItem('pochinko_admin_auth', 'true');
+      setIsAdminAuthenticated(true);
+      return { success: true };
+    }
+    return { success: false, error: 'Password Admin salah!' };
+  };
+
+  const logoutAdmin = () => {
+    sessionStorage.removeItem('pochinko_admin_auth');
+    setIsAdminAuthenticated(false);
   };
 
   return (
-    <AppContext.Provider value={{ products, addProduct, deleteProduct, updateProduct, togglePin, getProductById, loading }}>
+    <AppContext.Provider value={{ 
+      products, 
+      addProduct, 
+      deleteProduct, 
+      updateProduct, 
+      togglePin, 
+      getProductById, 
+      loading,
+      isAdminAuthenticated,
+      loginAdmin,
+      logoutAdmin
+    }}>
       {children}
     </AppContext.Provider>
   );
