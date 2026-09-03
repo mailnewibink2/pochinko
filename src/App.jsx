@@ -21,6 +21,14 @@ const AdminSettings = () => <div>Settings Placeholder</div>;
 const ClientLayout = () => {
   return (
     <div className="app-container">
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop stopColor="#5700ff" offset="0%" />
+            <stop stopColor="#FFB6C1" offset="100%" />
+          </linearGradient>
+        </defs>
+      </svg>
       <Outlet />
       <Navigation />
     </div>

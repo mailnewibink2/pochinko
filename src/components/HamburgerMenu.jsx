@@ -115,7 +115,7 @@ const HamburgerMenu = () => {
           to { opacity: 1; }
         }
       `}</style>
-    </div>
+    </>
   );
 };
 

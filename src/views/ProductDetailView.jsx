@@ -29,7 +29,7 @@ const ProductDetailView = () => {
         </button>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button className="header-btn" onClick={() => toggleWishlist(product)}>
-            <Heart size={22} strokeWidth={2.5} fill={isFavorited ? '#FF4B4B' : 'none'} color={isFavorited ? '#FF4B4B' : 'var(--text-primary)'} />
+            <Heart size={22} strokeWidth={isFavorited ? 0 : 2.5} fill={isFavorited ? 'url(#heartGradient)' : 'none'} color={isFavorited ? 'transparent' : 'var(--text-primary)'} />
           </button>
           <button className="header-btn" onClick={() => {
             const text = `Mau ikutan PO Impor tas lucu ini ${product.name} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.href}`;

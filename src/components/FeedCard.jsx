@@ -131,7 +131,7 @@ const FeedCard = ({ product }) => {
       <div className="card-actions">
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <button className="icon-btn" onClick={handleLove}>
-            <Heart size={24} strokeWidth={1.5} fill={isFavorited ? '#FF4B4B' : 'none'} color={isFavorited ? '#FF4B4B' : 'var(--text-primary)'} />
+            <Heart size={24} strokeWidth={isFavorited ? 0 : 1.5} fill={isFavorited ? 'url(#heartGradient)' : 'none'} color={isFavorited ? 'transparent' : 'var(--text-primary)'} />
           </button>
           <button className="icon-btn" onClick={handleShareWA}>
             <Send size={22} strokeWidth={1.5} color="var(--text-primary)" />
