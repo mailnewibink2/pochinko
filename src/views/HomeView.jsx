@@ -175,39 +175,39 @@ const HomeView = () => {
             {sortedProducts.map((product, index) => (
               <div 
                 key={product.id} 
-                style={{ cursor: 'pointer', aspectRatio: '1/1', position: 'relative' }}
+                style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
                   src={product.images?.[0] || 'https://via.placeholder.com/400'} 
                   alt={product.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
               </div>
             ))}
             {sortedProducts.map((product, index) => (
               <div 
                 key={`${product.id}-dup1`} 
-                style={{ cursor: 'pointer', aspectRatio: '1/1', position: 'relative' }}
+                style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
                   src={product.images?.[1] || product.images?.[0] || 'https://via.placeholder.com/400'} 
                   alt={product.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
               </div>
             ))}
              {sortedProducts.slice(0, 1).map((product, index) => (
               <div 
                 key={`${product.id}-dup2`} 
-                style={{ cursor: 'pointer', aspectRatio: '1/1', position: 'relative' }}
+                style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
                   src={product.images?.[0] || 'https://via.placeholder.com/400'} 
                   alt={product.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
               </div>
             ))}
