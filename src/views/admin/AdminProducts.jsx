@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Pin, Copy, Edit2, Trash2, GripHorizontal, ArrowUp, ArrowDown } from 'lucide-react';
+import { Pin, Copy, Edit2, Trash2, GripHorizontal, ArrowUp, ArrowDown, PlayCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
-import { optimizeCloudinaryUrl } from '../../utils/imageOptimization';
+import { optimizeCloudinaryUrl, isVideo, getVideoThumbnail } from '../../utils/imageOptimization';
 
 const AdminProducts = () => {
   const navigate = useNavigate();
@@ -142,10 +142,15 @@ const AdminProducts = () => {
               {/* Product Image & Badges */}
               <div style={{ position: 'relative', height: '300px', cursor: 'pointer' }} onClick={() => navigate(`/admin/products/${product.id}`)}>
                 <img 
-                  src={optimizeCloudinaryUrl(product.images?.[0] || 'https://via.placeholder.com/400', 400)} 
+                  src={getVideoThumbnail(optimizeCloudinaryUrl(product.images?.[0], 400)) || 'https://via.placeholder.com/400'} 
                   alt={product.name} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
+                {isVideo(product.images?.[0]) && (
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                    <PlayCircle size={48} color="white" />
+                  </div>
+                )}
                 <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', gap: '8px' }}>
                   {product.isPinned && (
                     <span className="badge badge-purple" style={{ background: '#5700ff', color: 'white', border: 'none' }}>

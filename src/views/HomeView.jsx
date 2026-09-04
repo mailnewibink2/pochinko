@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { LayoutGrid, Rows, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
+import { LayoutGrid, Rows, ChevronDown, ChevronUp, ArrowUp, PlayCircle } from 'lucide-react';
 import FeedCard from '../components/FeedCard';
 import HamburgerMenu from '../components/HamburgerMenu';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { isVideo, getVideoThumbnail } from '../utils/imageOptimization';
 
 const AccordionItem = ({ title, content }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -172,45 +173,66 @@ const HomeView = () => {
             overflow: 'hidden',
             boxShadow: 'var(--shadow-sm)'
           }}>
-            {sortedProducts.map((product, index) => (
+            {sortedProducts.map((product, index) => {
+              const media = product.images?.[0] || 'https://via.placeholder.com/400';
+              return (
               <div 
                 key={product.id} 
                 style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
-                  src={product.images?.[0] || 'https://via.placeholder.com/400'} 
+                  src={getVideoThumbnail(media)} 
                   alt={product.name} 
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
+                {isVideo(media) && (
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'white', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
+                    <PlayCircle size={20} fill="rgba(0,0,0,0.3)" />
+                  </div>
+                )}
               </div>
-            ))}
-            {sortedProducts.map((product, index) => (
+            )})}
+            {sortedProducts.map((product, index) => {
+              const media = product.images?.[1] || product.images?.[0] || 'https://via.placeholder.com/400';
+              return (
               <div 
                 key={`${product.id}-dup1`} 
                 style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
-                  src={product.images?.[1] || product.images?.[0] || 'https://via.placeholder.com/400'} 
+                  src={getVideoThumbnail(media)} 
                   alt={product.name} 
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
+                {isVideo(media) && (
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'white', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
+                    <PlayCircle size={20} fill="rgba(0,0,0,0.3)" />
+                  </div>
+                )}
               </div>
-            ))}
-             {sortedProducts.slice(0, 1).map((product, index) => (
+            )})}
+             {sortedProducts.slice(0, 1).map((product, index) => {
+              const media = product.images?.[0] || 'https://via.placeholder.com/400';
+              return (
               <div 
                 key={`${product.id}-dup2`} 
                 style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%' }}
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <img 
-                  src={product.images?.[0] || 'https://via.placeholder.com/400'} 
+                  src={getVideoThumbnail(media)} 
                   alt={product.name} 
                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
+                {isVideo(media) && (
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'white', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}>
+                    <PlayCircle size={20} fill="rgba(0,0,0,0.3)" />
+                  </div>
+                )}
               </div>
-            ))}
+            )})}
           </div>
           
         </div>

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Clock, Smartphone, Eye, UploadCloud, GripHorizontal, Trash2, CheckCircle2, Image as ImageIcon, Star } from 'lucide-react';
+import { ArrowLeft, Clock, Smartphone, Eye, UploadCloud, GripHorizontal, Trash2, CheckCircle2, Image as ImageIcon, Star, Video, PlayCircle } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
+import { isVideo, getVideoThumbnail } from '../../utils/imageOptimization';
 
 const AdminProductEditor = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const AdminProductEditor = () => {
     formData.append('upload_preset', uploadPreset);
 
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -229,7 +230,7 @@ const AdminProductEditor = () => {
                     onDrop={(e) => {
                       e.preventDefault();
                       setIsDragging(false);
-                      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
                       if (files.length > 0) handleFiles(files);
                     }}
                     onClick={() => fileInputRef.current?.click()}
@@ -239,15 +240,15 @@ const AdminProductEditor = () => {
                       ref={fileInputRef} 
                       style={{ display: 'none' }} 
                       multiple 
-                      accept="image/*"
+                      accept="image/*,video/mp4,video/quicktime,video/webm"
                       onChange={(e) => {
                         const files = Array.from(e.target.files);
                         if (files.length > 0) handleFiles(files);
                       }}
                     />
                     <UploadCloud size={32} color={isDragging ? '#5700ff' : '#878294'} style={{ margin: '0 auto 12px' }} />
-                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#2d2a36', marginBottom: '4px' }}>Click or drag images here to upload</p>
-                    <p style={{ fontSize: '12px', color: '#878294' }}>Upload directly to Cloudinary (PNG, JPG up to 5MB)</p>
+                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#2d2a36', marginBottom: '4px' }}>Click or drag media here to upload</p>
+                    <p style={{ fontSize: '12px', color: '#878294' }}>Upload images or videos directly to Cloudinary</p>
                   </div>
 
                   {/* Uploading Indicator */}
@@ -284,8 +285,13 @@ const AdminProductEditor = () => {
                           }}
                         >
                           <GripHorizontal size={18} color="#d9d5e3" style={{ cursor: 'grab' }} />
-                          <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden', background: '#f5f5f5', flexShrink: 0 }}>
-                            <img src={imgUrl} alt="thumb" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden', background: '#f5f5f5', flexShrink: 0, position: 'relative' }}>
+                            <img src={getVideoThumbnail(imgUrl)} alt="thumb" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            {isVideo(imgUrl) && (
+                              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                                <Video size={16} color="white" />
+                              </div>
+                            )}
                           </div>
                           
                           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -470,7 +476,11 @@ const AdminProductEditor = () => {
             }}>
               <div style={{ position: 'relative', height: '300px' }}>
                 {images[0] ? (
-                  <img src={images[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="preview" />
+                  isVideo(images[0]) ? (
+                    <video src={images[0]} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <img src={images[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="preview" />
+                  )
                 ) : (
                   <div style={{ width: '100%', height: '100%', background: '#F5F5F5', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#878294' }}>
                     <ImageIcon size={32} style={{ marginBottom: '8px', opacity: 0.5 }} />

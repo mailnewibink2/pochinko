@@ -12,3 +12,16 @@ export const optimizeCloudinaryUrl = (url, width = 800) => {
   
   return url;
 };
+
+export const isVideo = (url) => {
+  if (!url || typeof url !== 'string') return false;
+  return url.match(/\.(mp4|webm|mov|mkv)$/i) || url.includes('/video/upload/');
+};
+
+export const getVideoThumbnail = (url) => {
+  if (!url || typeof url !== 'string') return url;
+  if (isVideo(url) && url.includes('cloudinary.com')) {
+    return url.replace(/\.[^/.]+$/, ".jpg");
+  }
+  return url;
+};

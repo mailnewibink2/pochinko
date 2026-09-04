@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Share, Heart, Home, Grid, ArrowRight } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { optimizeCloudinaryUrl } from '../utils/imageOptimization';
+import { optimizeCloudinaryUrl, isVideo } from '../utils/imageOptimization';
 
 const ProductDetailView = () => {
   const { id } = useParams();
@@ -68,9 +68,14 @@ const ProductDetailView = () => {
       </header>
 
       <div className="pdp-gallery">
-        {(product.images || []).map((img, idx) => (
-          <img key={idx} src={optimizeCloudinaryUrl(img, 1000)} alt={`${product.name} ${idx + 1}`} />
-        ))}
+        {(product.images || []).map((img, idx) => {
+          const optimizedUrl = optimizeCloudinaryUrl(img, 1000);
+          return isVideo(img) ? (
+            <video key={idx} src={optimizedUrl} autoPlay muted loop playsInline controls style={{ width: '100%', height: '100%', objectFit: 'cover', flexShrink: 0, scrollSnapAlign: 'center' }} />
+          ) : (
+            <img key={idx} src={optimizedUrl} alt={`${product.name} ${idx + 1}`} />
+          );
+        })}
       </div>
 
       <div className="pdp-info">

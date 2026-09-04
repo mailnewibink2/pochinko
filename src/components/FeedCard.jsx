@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Send, ShoppingBag, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { optimizeCloudinaryUrl } from '../utils/imageOptimization';
+import { optimizeCloudinaryUrl, isVideo } from '../utils/imageOptimization';
 
 const FeedCard = ({ product }) => {
   const navigate = useNavigate();
@@ -63,18 +63,33 @@ const FeedCard = ({ product }) => {
           className="hide-scrollbar"
         >
           {images.map((img, idx) => (
-            <img 
-              key={idx} 
-              src={img} 
-              alt={`${product.name} ${idx + 1}`} 
-              style={{ 
-                flex: '0 0 100%', 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover', 
-                scrollSnapAlign: 'start' 
-              }} 
-            />
+            isVideo(img) ? (
+              <video 
+                key={idx} 
+                src={img} 
+                autoPlay muted loop playsInline
+                style={{ 
+                  flex: '0 0 100%', 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  scrollSnapAlign: 'start' 
+                }} 
+              />
+            ) : (
+              <img 
+                key={idx} 
+                src={img} 
+                alt={`${product.name} ${idx + 1}`} 
+                style={{ 
+                  flex: '0 0 100%', 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  scrollSnapAlign: 'start' 
+                }} 
+              />
+            )
           ))}
         </div>
 
