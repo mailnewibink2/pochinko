@@ -35,7 +35,7 @@ const ClientLayout = () => {
   );
 };
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -70,6 +70,30 @@ class ErrorBoundary extends React.Component {
 }
 
 function App() {
+  useEffect(() => {
+    // Mencegah Klik Kanan (Save As) pada Seluruh Gambar
+    const handleContextMenu = (e) => {
+      if (e.target.tagName === 'IMG' || e.target.closest('img')) {
+        e.preventDefault();
+      }
+    };
+    
+    // Mencegah Drag & Drop Gambar
+    const handleDragStart = (e) => {
+      if (e.target.tagName === 'IMG' || e.target.closest('img')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('dragstart', handleDragStart);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('dragstart', handleDragStart);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <AppProvider>
