@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutGrid, Rows, ChevronDown, ChevronUp } from 'lucide-react';
+import { LayoutGrid, Rows, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react';
 import FeedCard from '../components/FeedCard';
 import HamburgerMenu from '../components/HamburgerMenu';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,24 @@ const HomeView = () => {
   const navigate = useNavigate();
   const { products } = useAppContext();
 
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const sortedProducts = [...products]
     .filter(p => activeCategory === 'All Product' || p.category === activeCategory)
     .sort((a, b) => {
@@ -41,7 +59,7 @@ const HomeView = () => {
   ];
 
   return (
-    <div style={{ paddingBottom: '20px' }}>
+    <div style={{ paddingBottom: '90px' }}>
       <header className="feed-header">
         <h1>Pochinko</h1>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -97,7 +115,7 @@ const HomeView = () => {
           </div>
         </>
       ) : (
-        <div className="grid-view-container animate-fade-up" style={{ padding: '0 16px' }}>
+        <div className="grid-view-container animate-fade-up" style={{ padding: '0 16px 40px 16px' }}>
           
           {/* Profile Card */}
           <div style={{ 
@@ -116,19 +134,32 @@ const HomeView = () => {
               margin: '0 auto 12px',
               border: '3px solid white',
               boxShadow: 'var(--shadow-sm)',
-              backgroundImage: 'url(https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              background: 'var(--grad-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 800,
+              fontSize: '24px',
               position: 'relative',
               top: '-10px'
-            }} />
+            }}>PO</div>
             
-            <h2 className="text-base" style={{ marginBottom: '8px', fontWeight: 700 }}>Pochinko</h2>
-            <div style={{ fontSize: '32px', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.03em' }}>12.5K</div>
+            <h2 className="text-base" style={{ marginBottom: '4px', fontWeight: 700 }}>Pochinko</h2>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px', padding: '0 16px', lineHeight: 1.4 }}>
+              Platform Pre-Order barang impor pilihan dari China terpercaya
+            </p>
             
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'var(--text-secondary)' }}>
-              <span style={{ fontSize: '14px' }}>👍</span>
-              <span className="text-sm">for 45 active preorders</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
+              <div>
+                <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>12.5K</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Followers</div>
+              </div>
+              <div style={{ width: '1px', height: '24px', background: '#e0e0e0' }} />
+              <div>
+                <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>45</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Active PO</div>
+              </div>
             </div>
           </div>
 
@@ -183,6 +214,33 @@ const HomeView = () => {
           </div>
           
         </div>
+      )}
+
+      {/* Back to top button */}
+      {showTopBtn && (
+        <button 
+          onClick={scrollToTop}
+          className="animate-fade-up"
+          style={{
+            position: 'fixed',
+            bottom: '80px',
+            right: '20px',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            background: 'white',
+            color: 'var(--primary)',
+            border: 'none',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 50
+          }}
+        >
+          <ArrowUp size={24} strokeWidth={2.5} />
+        </button>
       )}
     </div>
   );

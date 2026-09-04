@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Send, ShoppingBag, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
+import { optimizeCloudinaryUrl } from '../utils/imageOptimization';
 
 const FeedCard = ({ product }) => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const FeedCard = ({ product }) => {
     }
   };
 
-  const images = product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/400'];
+  const images = product.images && product.images.length > 0 ? product.images.map(img => optimizeCloudinaryUrl(img, 600)) : ['https://via.placeholder.com/400'];
 
   const currentStatus = product.preorderInfo?.status || 'Open';
   const isClosed = currentStatus === 'Closed' || currentStatus === 'closed';

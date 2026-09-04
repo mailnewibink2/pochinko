@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Share, Heart, Home, Grid, ArrowRight } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
+import { optimizeCloudinaryUrl } from '../utils/imageOptimization';
 
 const ProductDetailView = () => {
   const { id } = useParams();
@@ -68,7 +69,7 @@ const ProductDetailView = () => {
 
       <div className="pdp-gallery">
         {(product.images || []).map((img, idx) => (
-          <img key={idx} src={img} alt={`${product.name} ${idx + 1}`} />
+          <img key={idx} src={optimizeCloudinaryUrl(img, 1000)} alt={`${product.name} ${idx + 1}`} />
         ))}
       </div>
 

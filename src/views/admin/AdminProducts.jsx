@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pin, Copy, Edit2, Trash2, GripHorizontal, ArrowUp, ArrowDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
+import { optimizeCloudinaryUrl } from '../../utils/imageOptimization';
 
 const AdminProducts = () => {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ const AdminProducts = () => {
               {/* Product Image & Badges */}
               <div style={{ position: 'relative', height: '300px', cursor: 'pointer' }} onClick={() => navigate(`/admin/products/${product.id}`)}>
                 <img 
-                  src={product.images?.[0] || 'https://via.placeholder.com/400'} 
+                  src={optimizeCloudinaryUrl(product.images?.[0] || 'https://via.placeholder.com/400', 400)} 
                   alt={product.name} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
