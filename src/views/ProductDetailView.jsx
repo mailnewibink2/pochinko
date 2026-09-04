@@ -40,6 +40,9 @@ const ProductDetailView = () => {
   );
 
   const isFavorited = wishlist.some(item => item.id === product.id);
+  const currentStatus = product.preorderInfo?.status || 'Open';
+  const isClosed = currentStatus === 'Closed' || currentStatus === 'closed';
+  const isClosingSoon = currentStatus === 'Closing Soon' || currentStatus === 'closing_soon';
 
   return (
     <div className="pdp-container animate-fade-up">
@@ -94,7 +97,13 @@ const ProductDetailView = () => {
              }}>
                BATCH #{product.preorderInfo?.batchNumber || '1'}
              </div>
-             <div className="text-sm" style={{ fontWeight: 800, color: 'var(--text-primary)' }}>48H LEFT</div>
+             {isClosed ? (
+               <div className="text-sm" style={{ fontWeight: 800, color: '#D32F2F', background: '#FFEBEB', padding: '4px 10px', borderRadius: '8px' }}>PO CLOSED</div>
+             ) : isClosingSoon ? (
+               <div className="text-sm" style={{ fontWeight: 800, color: '#E65100', background: '#FFF3E0', padding: '4px 10px', borderRadius: '8px' }}>CLOSING SOON</div>
+             ) : (
+               <div className="text-sm" style={{ fontWeight: 800, color: 'var(--text-primary)' }}>48H LEFT</div>
+             )}
            </div>
            
            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -153,13 +162,23 @@ const ProductDetailView = () => {
       </div>
 
       <div className="pdp-footer">
-        <button 
-          className="btn-primary" 
-          onClick={handleAddToCart}
-          style={{ background: isAdded ? '#4BB543' : '' }}
-        >
-          {isAdded ? 'ADDED TO CART!' : 'ADD TO CART'}
-        </button>
+        {isClosed ? (
+          <button 
+            className="btn-primary" 
+            disabled
+            style={{ background: '#e0e0e0', color: '#888888', cursor: 'not-allowed', opacity: 0.8 }}
+          >
+            PO CLOSED
+          </button>
+        ) : (
+          <button 
+            className="btn-primary" 
+            onClick={handleAddToCart}
+            style={{ background: isAdded ? '#4BB543' : '' }}
+          >
+            {isAdded ? 'ADDED TO CART!' : 'ADD TO CART'}
+          </button>
+        )}
       </div>
     </div>
   );

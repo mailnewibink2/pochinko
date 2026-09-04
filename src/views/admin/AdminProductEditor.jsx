@@ -102,6 +102,7 @@ const AdminProductEditor = () => {
   const [dimensions, setDimensions] = useState(''); // e.g. 30x25x22
   const [description, setDescription] = useState('');
   const [batch, setBatch] = useState('');
+  const [status, setStatus] = useState('Open'); // Open, Closing Soon, Closed
   
   // State for live preview & feed appearance
   const [badgeText, setBadgeText] = useState('48H LEFT');
@@ -118,6 +119,7 @@ const AdminProductEditor = () => {
         setDimensions(existingProduct.dimensions || '');
         setDescription(existingProduct.description || '');
         setBatch(existingProduct.preorderInfo?.batchNumber || '');
+        setStatus(existingProduct.preorderInfo?.status || 'Open');
         setImages(existingProduct.images || []);
       }
     }
@@ -131,6 +133,7 @@ const AdminProductEditor = () => {
     
     // Clean up empty images
     const cleanImages = images.filter(img => img.trim() !== '');
+    const existingProduct = isEditMode ? getProductById(id) : null;
 
     const newProduct = {
       name,
@@ -142,9 +145,10 @@ const AdminProductEditor = () => {
       description,
       images: cleanImages.length ? cleanImages : ['https://via.placeholder.com/400?text=No+Image'],
       preorderInfo: {
+        ...(existingProduct?.preorderInfo || {}),
         batchNumber: batch || '1',
-        status: 'open',
-        joinedCount: 0,
+        status: status,
+        joinedCount: existingProduct?.preorderInfo?.joinedCount || 0,
         endDate: '2026-12-31'
       }
     };
@@ -383,11 +387,15 @@ const AdminProductEditor = () => {
                       <input type="number" value={batch} onChange={e => setBatch(e.target.value)} placeholder="14" style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f0eef5', fontSize: '14px', fontFamily: 'Inter' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#878294', marginBottom: '8px' }}>Status</label>
-                      <select style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f0eef5', fontSize: '14px', fontFamily: 'Inter', background: 'white' }}>
-                        <option>Open</option>
-                        <option>Closing Soon</option>
-                        <option>Closed</option>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#878294', marginBottom: '8px' }}>Status PO</label>
+                      <select 
+                        value={status} 
+                        onChange={e => setStatus(e.target.value)} 
+                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f0eef5', fontSize: '14px', fontFamily: 'Inter', background: 'white' }}
+                      >
+                        <option value="Open">Open</option>
+                        <option value="Closing Soon">Closing Soon</option>
+                        <option value="Closed">Closed</option>
                       </select>
                     </div>
                   </div>

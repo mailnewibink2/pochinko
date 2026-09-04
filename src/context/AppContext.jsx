@@ -7,6 +7,16 @@ export const AppProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Helper to sort products array based on sortOrder & creation
+  const sortProductsArray = (arr) => {
+    return [...arr].sort((a, b) => {
+      const orderA = a.preorderInfo?.sortOrder !== undefined ? a.preorderInfo.sortOrder : 999999;
+      const orderB = b.preorderInfo?.sortOrder !== undefined ? b.preorderInfo.sortOrder : 999999;
+      if (orderA !== orderB) return orderA - orderB;
+      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
+  };
+
   // Fetch from Supabase on mount
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +27,8 @@ export const AppProvider = ({ children }) => {
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        setProducts(data || []);
+        const sorted = sortProductsArray(data || []);
+        setProducts(sorted);
       } catch (err) {
         console.error('Error fetching products from Supabase:', err);
       } finally {
@@ -44,7 +55,6 @@ export const AppProvider = ({ children }) => {
         
       if (error) {
         console.error('Error adding product:', error);
-        // Fallback UI could be implemented here
       }
     } catch (err) {
       console.error('Exception adding product:', err);
@@ -80,6 +90,46 @@ export const AppProvider = ({ children }) => {
       if (error) console.error('Error updating product:', error);
     } catch (err) {
       console.error('Exception updating product:', err);
+    }
+  };
+
+  const updateProductStatus = async (id, newStatus) => {
+    const targetProduct = products.find(p => p.id === id);
+    if (!targetProduct) return;
+
+    const newPreorderInfo = {
+      ...(targetProduct.preorderInfo || {}),
+      status: newStatus
+    };
+
+    updateProduct(id, { preorderInfo: newPreorderInfo });
+  };
+
+  const reorderProducts = async (reorderedList) => {
+    // Re-assign sortOrder index to each item in order
+    const updatedList = reorderedList.map((product, idx) => ({
+      ...product,
+      preorderInfo: {
+        ...(product.preorderInfo || {}),
+        sortOrder: idx
+      }
+    }));
+
+    // Optimistic UI update
+    setProducts(updatedList);
+
+    // Save sortOrder to Supabase in background
+    try {
+      await Promise.all(
+        updatedList.map(p =>
+          supabase
+            .from('products')
+            .update({ preorderInfo: p.preorderInfo })
+            .eq('id', p.id)
+        )
+      );
+    } catch (err) {
+      console.error('Error saving reordered products to Supabase:', err);
     }
   };
 
@@ -197,6 +247,8 @@ export const AppProvider = ({ children }) => {
       addProduct, 
       deleteProduct, 
       updateProduct, 
+      updateProductStatus,
+      reorderProducts,
       togglePin, 
       getProductById, 
       loading,

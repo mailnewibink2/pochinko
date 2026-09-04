@@ -39,6 +39,10 @@ const FeedCard = ({ product }) => {
 
   const images = product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/400'];
 
+  const currentStatus = product.preorderInfo?.status || 'Open';
+  const isClosed = currentStatus === 'Closed' || currentStatus === 'closed';
+  const isClosingSoon = currentStatus === 'Closing Soon' || currentStatus === 'closing_soon';
+
   return (
     <div className="feed-card animate-fade-up" onClick={() => navigate(`/product/${product.id}`)}>
       <div className="feed-image-container" style={{ position: 'relative' }}>
@@ -122,9 +126,19 @@ const FeedCard = ({ product }) => {
           </div>
         )}
 
-        <div className="countdown-badge">
-          48H LEFT
-        </div>
+        {isClosed ? (
+          <div className="countdown-badge" style={{ background: '#333333', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)' }}>
+            PO CLOSED
+          </div>
+        ) : isClosingSoon ? (
+          <div className="countdown-badge" style={{ background: '#ff9800', color: '#ffffff' }}>
+            CLOSING SOON
+          </div>
+        ) : (
+          <div className="countdown-badge">
+            48H LEFT
+          </div>
+        )}
       </div>
       
       {/* Social Actions Row */}
@@ -138,17 +152,28 @@ const FeedCard = ({ product }) => {
           </button>
         </div>
         
-        <button 
-          className="btn-join-po" 
-          onClick={handleAddToCart}
-          style={{ background: isAdded ? '#4BB543' : '', color: isAdded ? 'white' : '' }}
-        >
-          {isAdded ? (
-            <><Check size={16} strokeWidth={3} style={{ marginRight: '4px' }} /> ADDED</>
-          ) : (
-            <><ShoppingBag size={16} strokeWidth={2.5} style={{ marginRight: '4px' }} /> ADD TO CART</>
-          )}
-        </button>
+        {isClosed ? (
+          <button 
+            className="btn-join-po" 
+            disabled
+            onClick={(e) => { e.stopPropagation(); alert('Maaf, Pre-Order untuk produk ini telah ditutup.'); }}
+            style={{ background: '#e0e0e0', color: '#888888', cursor: 'not-allowed', opacity: 0.8 }}
+          >
+            PO CLOSED
+          </button>
+        ) : (
+          <button 
+            className="btn-join-po" 
+            onClick={handleAddToCart}
+            style={{ background: isAdded ? '#4BB543' : '', color: isAdded ? 'white' : '' }}
+          >
+            {isAdded ? (
+              <><Check size={16} strokeWidth={3} style={{ marginRight: '4px' }} /> ADDED</>
+            ) : (
+              <><ShoppingBag size={16} strokeWidth={2.5} style={{ marginRight: '4px' }} /> ADD TO CART</>
+            )}
+          </button>
+        )}
       </div>
       
       <div className="feed-info">
