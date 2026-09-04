@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Share, Heart } from 'lucide-react';
+import { ChevronLeft, Share, Heart, Home, Grid, ArrowRight } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const ProductDetailView = () => {
@@ -17,21 +17,44 @@ const ProductDetailView = () => {
     setTimeout(() => setIsAdded(false), 2000);
   };
 
-  if (!product) return <div>Product not found</div>;
+  const handleBack = () => {
+    if (window.history.length > 2 && document.referrer.includes(window.location.host)) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
+  if (!product) return (
+    <div style={{ padding: '60px 24px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+      <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '12px' }}>Produk tidak ditemukan</h2>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Produk ini mungkin telah dihapus atau tidak tersedia.</p>
+      <button 
+        onClick={() => navigate('/')} 
+        className="btn-primary" 
+        style={{ padding: '12px 24px', maxWidth: '260px', margin: '0 auto' }}
+      >
+        Lihat Koleksi Pochinko
+      </button>
+    </div>
+  );
 
   const isFavorited = wishlist.some(item => item.id === product.id);
 
   return (
     <div className="pdp-container animate-fade-up">
       <header className="pdp-header">
-        <button onClick={() => navigate(-1)} className="header-btn">
+        <button onClick={handleBack} className="header-btn" title="Kembali">
           <ChevronLeft size={24} strokeWidth={2.5} color="var(--text-primary)" />
         </button>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button className="header-btn" onClick={() => toggleWishlist(product)}>
+          <button className="header-btn" title="Lihat Koleksi Pochinko" onClick={() => navigate('/')}>
+            <Home size={20} strokeWidth={2.5} color="var(--text-primary)" />
+          </button>
+          <button className="header-btn" title="Favorit" onClick={() => toggleWishlist(product)}>
             <Heart size={22} strokeWidth={isFavorited ? 0 : 2.5} fill={isFavorited ? 'url(#heartGradient)' : 'none'} color={isFavorited ? 'transparent' : 'var(--text-primary)'} />
           </button>
-          <button className="header-btn" onClick={() => {
+          <button className="header-btn" title="Bagikan ke WhatsApp" onClick={() => {
             const text = `Mau ikutan PO Impor tas lucu ini ${product.name} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.href}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
           }}>
@@ -75,14 +98,58 @@ const ProductDetailView = () => {
            </div>
            
            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-             <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{product.preorderInfo?.joinedCount || 0}</span> people have joined this batch.
-             Estimated arrival: {product.preorderInfo?.estArrival || 'TBA'}
+             <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{product.preorderInfo?.joinedCount || 0}</span> orang sudah bergabung di batch ini.
+             Estimasi tiba: {product.preorderInfo?.estArrival || 'TBA'}
            </div>
         </div>
 
-        <div className="text-base" style={{ lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: '32px', whiteSpace: 'pre-wrap' }}>
+        <div className="text-base" style={{ lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: '24px', whiteSpace: 'pre-wrap' }}>
           {product.description || product.details}
         </div>
+
+        {/* Tombol Banner "Lihat Koleksi Lain Pochinko" untuk pengunjung dari WhatsApp/Link luar */}
+        <div 
+          onClick={() => navigate('/')}
+          style={{
+            background: 'linear-gradient(135deg, #FAF8F5 0%, #F5EFE6 100%)',
+            border: '1.5px solid #EAE0D5',
+            borderRadius: 'var(--radius-lg)',
+            padding: '16px 20px',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.04)',
+            transition: 'transform 0.2s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '12px',
+              background: 'var(--grad-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              boxShadow: '0 4px 10px rgba(87,0,255,0.2)'
+            }}>
+              <Grid size={22} strokeWidth={2.5} />
+            </div>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '15px', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                Lihat Koleksi Lain Pochinko
+              </div>
+              <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+                Temukan pilihan tas & sepatu impor terpopuler
+              </div>
+            </div>
+          </div>
+          <ArrowRight size={20} color="var(--text-primary)" strokeWidth={2.5} />
+        </div>
+
       </div>
 
       <div className="pdp-footer">
@@ -99,3 +166,4 @@ const ProductDetailView = () => {
 };
 
 export default ProductDetailView;
+
