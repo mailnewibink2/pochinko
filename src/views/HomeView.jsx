@@ -115,7 +115,7 @@ const HomeView = () => {
           </div>
         </>
       ) : (
-        <div className="grid-view-container animate-fade-up" style={{ padding: '0 16px 40px 16px' }}>
+        <div className="grid-view-container animate-fade-up" style={{ padding: '0 16px 120px 16px' }}>
           
           {/* Profile Card */}
           <div style={{ 
