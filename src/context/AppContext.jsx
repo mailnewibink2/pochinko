@@ -10,8 +10,8 @@ export const AppProvider = ({ children }) => {
   // Helper to sort products array based on sortOrder & creation
   const sortProductsArray = (arr) => {
     return [...arr].sort((a, b) => {
-      const orderA = a.preorderInfo?.sortOrder !== undefined ? a.preorderInfo.sortOrder : 999999;
-      const orderB = b.preorderInfo?.sortOrder !== undefined ? b.preorderInfo.sortOrder : 999999;
+      const orderA = a.preorderInfo?.sortOrder !== undefined ? a.preorderInfo.sortOrder : -1;
+      const orderB = b.preorderInfo?.sortOrder !== undefined ? b.preorderInfo.sortOrder : -1;
       if (orderA !== orderB) return orderA - orderB;
       return new Date(b.created_at || 0) - new Date(a.created_at || 0);
     });
@@ -42,7 +42,8 @@ export const AppProvider = ({ children }) => {
   const addProduct = async (newProduct) => {
     const productWithId = {
       ...newProduct,
-      id: `PROD-${Date.now()}`
+      id: `PROD-${Date.now()}`,
+      created_at: new Date().toISOString()
     };
     
     // Optimistic UI update

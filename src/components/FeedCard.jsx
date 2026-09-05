@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Send, ShoppingBag, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { optimizeCloudinaryUrl, isVideo } from '../utils/imageOptimization';
+import { optimizeCloudinaryUrl, isVideo, getVideoThumbnail } from '../utils/imageOptimization';
 
 const FeedCard = ({ product }) => {
   const navigate = useNavigate();
@@ -62,11 +62,13 @@ const FeedCard = ({ product }) => {
           }}
           className="hide-scrollbar"
         >
-          {images.map((img, idx) => (
-            isVideo(img) ? (
+          {(product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/400']).map((rawImg, idx) => {
+            const img = optimizeCloudinaryUrl(rawImg, 600);
+            return isVideo(rawImg) ? (
               <video 
                 key={idx} 
-                src={img} 
+                src={rawImg} 
+                poster={getVideoThumbnail(img)}
                 autoPlay muted loop playsInline
                 style={{ 
                   flex: '0 0 100%', 
@@ -90,7 +92,7 @@ const FeedCard = ({ product }) => {
                 }} 
               />
             )
-          ))}
+          })}
         </div>
 
         {/* Navigation Arrows */}
@@ -212,9 +214,17 @@ const FeedCard = ({ product }) => {
           </div>
         )}
 
-        <div className="feed-price">
+        <div className="feed-price" style={{ marginBottom: product.name && !product.name.toLowerCase().includes('shoulder rest') ? '4px' : '12px' }}>
           Rp{(product.price || 0).toLocaleString('id-ID')}
         </div>
+        {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
+          <div style={{ fontSize: '11px', color: '#E91E63', fontWeight: 600, marginBottom: '12px', lineHeight: 1.3 }}>
+            Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
+            <span style={{ display: 'block', fontSize: '10px', fontWeight: 500, marginTop: '2px', color: 'var(--text-secondary)' }}>
+              (minimal pembelian 2pcs item yang sama)
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

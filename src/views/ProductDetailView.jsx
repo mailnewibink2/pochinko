@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Share, Heart, Home, Grid, ArrowRight } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { optimizeCloudinaryUrl, isVideo } from '../utils/imageOptimization';
+import { optimizeCloudinaryUrl, isVideo, getVideoThumbnail } from '../utils/imageOptimization';
 
 const ProductDetailView = () => {
   const { id } = useParams();
@@ -68,10 +68,10 @@ const ProductDetailView = () => {
       </header>
 
       <div className="pdp-gallery">
-        {(product.images || []).map((img, idx) => {
-          const optimizedUrl = optimizeCloudinaryUrl(img, 1000);
-          return isVideo(img) ? (
-            <video key={idx} src={optimizedUrl} autoPlay muted loop playsInline controls style={{ width: '100%', height: '100%', objectFit: 'cover', flexShrink: 0, scrollSnapAlign: 'center' }} />
+        {(product.images || []).map((rawImg, idx) => {
+          const optimizedUrl = optimizeCloudinaryUrl(rawImg, 1000);
+          return isVideo(rawImg) ? (
+            <video key={idx} src={rawImg} poster={getVideoThumbnail(optimizedUrl)} autoPlay muted loop playsInline controls style={{ width: '100%', height: '100%', objectFit: 'cover', flexShrink: 0, scrollSnapAlign: 'center' }} />
           ) : (
             <img key={idx} src={optimizedUrl} alt={`${product.name} ${idx + 1}`} />
           );
@@ -90,6 +90,14 @@ const ProductDetailView = () => {
              <div className="text-lg" style={{ color: 'var(--text-primary)', fontWeight: 800 }}>
                Rp{(product.price || 0).toLocaleString('id-ID')}
              </div>
+             {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
+               <div style={{ fontSize: '12px', color: '#E91E63', fontWeight: 600, marginTop: '8px', lineHeight: 1.4, padding: '8px 12px', background: '#FCE4EC', borderRadius: '8px' }}>
+                 Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
+                 <span style={{ display: 'block', fontSize: '11px', fontWeight: 500, marginTop: '2px', color: '#D81B60' }}>
+                   (minimal pembelian 2pcs item yang sama)
+                 </span>
+               </div>
+             )}
           </div>
         </div>
 
