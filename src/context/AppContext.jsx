@@ -27,7 +27,21 @@ export const AppProvider = ({ children }) => {
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        const sorted = sortProductsArray(data || []);
+        
+        // Ensure JSON fields are parsed if they come back as strings
+        const parsedData = (data || []).map(p => {
+          let parsedPreorderInfo = p.preorderInfo;
+          if (typeof parsedPreorderInfo === 'string') {
+            try { parsedPreorderInfo = JSON.parse(parsedPreorderInfo); } catch (e) {}
+          }
+          let parsedVariants = p.variants;
+          if (typeof parsedVariants === 'string') {
+            try { parsedVariants = JSON.parse(parsedVariants); } catch (e) {}
+          }
+          return { ...p, preorderInfo: parsedPreorderInfo, variants: parsedVariants };
+        });
+
+        const sorted = sortProductsArray(parsedData);
         setProducts(sorted);
       } catch (err) {
         console.error('Error fetching products from Supabase:', err);
