@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Clock, Smartphone, Eye, UploadCloud, GripHorizontal, Trash2, CheckCircle2, Image as ImageIcon, Star, Video, PlayCircle } from 'lucide-react';
+import { ArrowLeft, Clock, Smartphone, Eye, UploadCloud, GripHorizontal, Trash2, CheckCircle2, Image as ImageIcon, Star, Video, PlayCircle, Link as LinkIcon, Plus } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { isVideo, getVideoThumbnail } from '../../utils/imageOptimization';
 
@@ -19,6 +19,15 @@ const AdminProductEditor = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Direct URL Input State
+  const [imageUrlInput, setImageUrlInput] = useState('');
+
+  const handleAddImageUrl = () => {
+    if (!imageUrlInput.trim()) return;
+    setImages(prev => [...prev, imageUrlInput.trim()]);
+    setImageUrlInput('');
+  };
 
   // Drag and Drop Reorder State
   const [draggedIdx, setDraggedIdx] = useState(null);
@@ -249,6 +258,33 @@ const AdminProductEditor = () => {
                     <UploadCloud size={32} color={isDragging ? '#5700ff' : '#878294'} style={{ margin: '0 auto 12px' }} />
                     <p style={{ fontSize: '14px', fontWeight: 600, color: '#2d2a36', marginBottom: '4px' }}>Click or drag media here to upload</p>
                     <p style={{ fontSize: '12px', color: '#878294' }}>Upload images or videos directly to Cloudinary</p>
+                  </div>
+
+                  {/* Direct URL Input */}
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <LinkIcon size={16} color="#878294" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                      <input 
+                        type="url"
+                        value={imageUrlInput}
+                        onChange={(e) => setImageUrlInput(e.target.value)}
+                        placeholder="Atau paste link gambar/video web lain (https://...)"
+                        style={{ width: '100%', padding: '10px 12px 10px 36px', borderRadius: '12px', border: '1px solid #d9d5e3', fontSize: '13px', fontFamily: 'Inter' }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddImageUrl();
+                          }
+                        }}
+                      />
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={handleAddImageUrl}
+                      style={{ padding: '10px 16px', background: '#5700ff', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 600, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', shrink: 0 }}
+                    >
+                      <Plus size={16} /> Tambah
+                    </button>
                   </div>
 
                   {/* Uploading Indicator */}
