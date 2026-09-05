@@ -56,9 +56,13 @@ export const AppProvider = ({ children }) => {
         
       if (error) {
         console.error('Error adding product:', error);
+        alert('Gagal menambah produk di database: ' + error.message);
+      } else {
+        alert('Produk berhasil ditambahkan ke database!');
       }
     } catch (err) {
       console.error('Exception adding product:', err);
+      alert('Terjadi kesalahan: ' + err.message);
     }
   };
 
@@ -88,9 +92,15 @@ export const AppProvider = ({ children }) => {
         .update(updatedData)
         .eq('id', id);
 
-      if (error) console.error('Error updating product:', error);
+      if (error) {
+        console.error('Error updating product:', error);
+        alert('Gagal mengupdate produk di database: ' + error.message);
+      } else {
+        alert('Produk berhasil diupdate!');
+      }
     } catch (err) {
       console.error('Exception updating product:', err);
+      alert('Terjadi kesalahan: ' + err.message);
     }
   };
 
