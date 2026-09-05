@@ -172,10 +172,10 @@ const AdminProducts = () => {
                     Size: {product.sizeCategory} {product.dimensions ? `${product.dimensions}cm` : ''}
                   </div>
                 )}
-                <div style={{ fontSize: '15px', fontWeight: 800, marginBottom: product.name && !product.name.toLowerCase().includes('shoulder rest') ? '4px' : '14px' }}>
+                <div style={{ fontSize: '15px', fontWeight: 800, marginBottom: (product.name && !product.name.toLowerCase().includes('shoulder rest') && product.category?.toLowerCase() !== 'accessories') ? '4px' : '14px' }}>
                   Rp{(product.price || 0).toLocaleString('id-ID')}
                 </div>
-                {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
+                {product.name && !product.name.toLowerCase().includes('shoulder rest') && product.category?.toLowerCase() !== 'accessories' && (
                   <div style={{ fontSize: '11px', color: '#E91E63', fontWeight: 600, marginBottom: '14px', lineHeight: 1.3 }}>
                     Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
                     <span style={{ display: 'block', fontSize: '10px', fontWeight: 500, marginTop: '2px', color: '#878294' }}>

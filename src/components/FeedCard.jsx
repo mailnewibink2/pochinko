@@ -214,10 +214,10 @@ const FeedCard = ({ product }) => {
           </div>
         )}
 
-        <div className="feed-price" style={{ marginBottom: product.name && !product.name.toLowerCase().includes('shoulder rest') ? '4px' : '12px' }}>
+        <div className="feed-price" style={{ marginBottom: (product.name && !product.name.toLowerCase().includes('shoulder rest') && product.category?.toLowerCase() !== 'accessories') ? '4px' : '12px' }}>
           Rp{(product.price || 0).toLocaleString('id-ID')}
         </div>
-        {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
+        {product.name && !product.name.toLowerCase().includes('shoulder rest') && product.category?.toLowerCase() !== 'accessories' && (
           <div style={{ fontSize: '11px', color: '#E91E63', fontWeight: 600, marginBottom: '12px', lineHeight: 1.3 }}>
             Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
             <span style={{ display: 'block', fontSize: '10px', fontWeight: 500, marginTop: '2px', color: 'var(--text-secondary)' }}>
