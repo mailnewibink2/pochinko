@@ -157,7 +157,6 @@ const AdminProductEditor = () => {
       category,
       sizeCategory,
       dimensions,
-      variants: variantsInput ? variantsInput.split(',').map(v => v.trim()).filter(Boolean) : [],
       description,
       images: cleanImages.length ? cleanImages : ['https://via.placeholder.com/400?text=No+Image'],
       preorderInfo: {
