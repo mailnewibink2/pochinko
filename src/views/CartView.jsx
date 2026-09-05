@@ -70,7 +70,7 @@ const CartView = () => {
       // Generate WA message
       let text = `Halo Admin, saya ingin Checkout PO:\n\n`;
       cart.forEach((item, index) => {
-        text += `${index + 1}. ${item.product.name} ${item.size ? `(Size: ${item.size})` : ''}\n   Rp${item.product.price.toLocaleString('id-ID')} x ${item.quantity} = Rp${(item.product.price * item.quantity).toLocaleString('id-ID')}\n`;
+        text += `${index + 1}. ${item.product.name} ${item.size ? `(Varian/Size: ${item.size})` : ''}\n   Rp${item.product.price.toLocaleString('id-ID')} x ${item.quantity} = Rp${(item.product.price * item.quantity).toLocaleString('id-ID')}\n`;
       });
       text += `\n*TOTAL: Rp${totalAmount.toLocaleString('id-ID')}*\n`;
       text += `\nData Pengiriman:\n- Nama: ${formData.name}\n- No WA: ${formData.phone}\n- Email: ${formData.email}\n- Alamat: ${formData.address}`;
@@ -122,7 +122,7 @@ const CartView = () => {
               <div>
                 <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{item.product.name}</h3>
                 <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  {item.size ? `Size: ${item.size}` : 'All Size'} • Rp{item.product.price.toLocaleString('id-ID')}
+                  {item.size ? `Varian/Size: ${item.size}` : 'All Size'} • Rp{item.product.price.toLocaleString('id-ID')}
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>

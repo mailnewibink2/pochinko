@@ -9,12 +9,16 @@ const FeedCard = ({ product }) => {
   const carouselRef = useRef(null);
   const { addToCart, wishlist, toggleWishlist } = useAppContext();
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [isAdded, setIsAdded] = useState(false);
-  const isFavorited = wishlist.some(item => item.id === product.id);
+  const [selectedVariant, setSelectedVariant] = useState(() => {
+    if (Array.isArray(product.variants) && product.variants.length > 0) {
+      return product.variants[0];
+    }
+    return product.sizeCategory || 'All Size';
+  });
 
   const handleShareWA = (e) => {
     e.stopPropagation();
-    const text = `Mau ikutan PO Impor tas lucu ini ${product.name} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.origin}/product/${product.id}`;
+    const text = `Mau ikutan PO Impor tas lucu ini ${product.name} ${selectedVariant ? `(Varian: ${selectedVariant})` : ''} (Rp${product.price.toLocaleString('id-ID')})?\n\nCek di sini: ${window.location.origin}/product/${product.id}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -25,7 +29,7 @@ const FeedCard = ({ product }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart(product, product.sizeCategory || 'All Size', 1);
+    addToCart(product, selectedVariant, 1);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -211,6 +215,36 @@ const FeedCard = ({ product }) => {
         {(product.sizeCategory || product.dimensions) && (
           <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
             Size: {product.sizeCategory} {product.dimensions ? `${product.dimensions}cm` : ''}
+          </div>
+        )}
+
+        {Array.isArray(product.variants) && product.variants.length > 0 && (
+          <div style={{ margin: '8px 0 12px 0' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>
+              Pilih Varian: <span style={{ color: '#5700ff' }}>{selectedVariant}</span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {product.variants.map((v, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setSelectedVariant(v)}
+                  style={{
+                    padding: '4px 12px',
+                    borderRadius: '16px',
+                    border: selectedVariant === v ? '1.5px solid #5700ff' : '1px solid #e0e0e0',
+                    background: selectedVariant === v ? '#F7F4FF' : 'white',
+                    color: selectedVariant === v ? '#5700ff' : '#2d2a36',
+                    fontSize: '12px',
+                    fontWeight: selectedVariant === v ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

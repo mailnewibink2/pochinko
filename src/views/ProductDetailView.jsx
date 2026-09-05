@@ -11,9 +11,15 @@ const ProductDetailView = () => {
   
   const product = getProductById(id);
   const [isAdded, setIsAdded] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(() => {
+    if (product && Array.isArray(product.variants) && product.variants.length > 0) {
+      return product.variants[0];
+    }
+    return product?.sizeCategory || 'All Size';
+  });
 
   const handleAddToCart = () => {
-    addToCart(product, product.sizeCategory || 'All Size', 1);
+    addToCart(product, selectedVariant, 1);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -87,6 +93,35 @@ const ProductDetailView = () => {
                  Size: {product.sizeCategory} {product.dimensions ? `${product.dimensions}cm` : ''}
                </div>
              )}
+              {Array.isArray(product.variants) && product.variants.length > 0 && (
+                <div style={{ margin: '12px 0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
+                    Pilih Varian: <span style={{ color: '#5700ff' }}>{selectedVariant}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {product.variants.map((v, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setSelectedVariant(v)}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '20px',
+                          border: selectedVariant === v ? '2px solid #5700ff' : '1px solid #e0e0e0',
+                          background: selectedVariant === v ? '#F7F4FF' : 'white',
+                          color: selectedVariant === v ? '#5700ff' : '#2d2a36',
+                          fontSize: '13px',
+                          fontWeight: selectedVariant === v ? 700 : 500,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
              <div className="text-lg" style={{ color: 'var(--text-primary)', fontWeight: 800 }}>
                Rp{(product.price || 0).toLocaleString('id-ID')}
              </div>

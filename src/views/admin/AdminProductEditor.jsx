@@ -110,6 +110,7 @@ const AdminProductEditor = () => {
   const [category, setCategory] = useState('Bags'); // Bags, Shoes, Accessories, Dresses
   const [sizeCategory, setSizeCategory] = useState(''); // Small, Medium, Large
   const [dimensions, setDimensions] = useState(''); // e.g. 30x25x22
+  const [variantsInput, setVariantsInput] = useState(''); // e.g. Model A, Model B
   const [description, setDescription] = useState('');
   const [batch, setBatch] = useState('');
   const [status, setStatus] = useState('Open'); // Open, Closing Soon, Closed
@@ -127,6 +128,7 @@ const AdminProductEditor = () => {
         setCategory(existingProduct.category || 'Bags');
         setSizeCategory(existingProduct.sizeCategory || '');
         setDimensions(existingProduct.dimensions || '');
+        setVariantsInput(Array.isArray(existingProduct.variants) ? existingProduct.variants.join(', ') : (existingProduct.variants || ''));
         setDescription(existingProduct.description || '');
         setBatch(existingProduct.preorderInfo?.batchNumber || '');
         setStatus(existingProduct.preorderInfo?.status || 'Open');
@@ -152,6 +154,7 @@ const AdminProductEditor = () => {
       category,
       sizeCategory,
       dimensions,
+      variants: variantsInput ? variantsInput.split(',').map(v => v.trim()).filter(Boolean) : [],
       description,
       images: cleanImages.length ? cleanImages : ['https://via.placeholder.com/400?text=No+Image'],
       preorderInfo: {
@@ -409,6 +412,22 @@ const AdminProductEditor = () => {
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#878294', marginBottom: '8px' }}>Dimensions (cm)</label>
                         <input type="text" value={dimensions} onChange={e => setDimensions(e.target.value)} placeholder="e.g. 30x25x22" style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f0eef5', fontSize: '14px', fontFamily: 'Inter' }} />
                       </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#878294', marginBottom: '8px' }}>
+                        Pilihan Varian {category === 'Accessories' && <span style={{ color: '#5700ff', fontWeight: 700 }}>(Wajib/Diutamakan untuk Accessories)</span>}
+                      </label>
+                      <input 
+                        type="text" 
+                        value={variantsInput} 
+                        onChange={e => setVariantsInput(e.target.value)} 
+                        placeholder="Contoh: Merah, Biru, Hijau, Model A, Model B (pisahkan dengan koma)" 
+                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f0eef5', fontSize: '14px', fontFamily: 'Inter' }} 
+                      />
+                      <span style={{ fontSize: '11px', color: '#878294', display: 'block', marginTop: '4px' }}>
+                        Tuliskan daftar varian dipisahkan koma. Pembeli bisa memilih salah satu saat checkout.
+                      </span>
                     </div>
 
                     <div>
