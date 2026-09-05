@@ -274,10 +274,7 @@ const FeedCard = ({ product }) => {
         </div>
         {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
           <div style={{ fontSize: '11px', color: '#E91E63', fontWeight: 600, marginBottom: '12px', lineHeight: 1.3 }}>
-            Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
-            <span style={{ display: 'block', fontSize: '10px', fontWeight: 500, marginTop: '2px', color: 'var(--text-secondary)' }}>
-              (minimal pembelian 2pcs item yang sama)
-            </span>
+            otomatis discount -20rb apabila membeli item yang sama atau tulis harga reseller minimal 4. kecuali item shoulder rest
           </div>
         )}
       </div>

@@ -145,10 +145,7 @@ const ProductDetailView = () => {
              </div>
              {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
                <div style={{ fontSize: '12px', color: '#E91E63', fontWeight: 600, marginTop: '8px', lineHeight: 1.4, padding: '8px 12px', background: '#FCE4EC', borderRadius: '8px' }}>
-                 Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
-                 <span style={{ display: 'block', fontSize: '11px', fontWeight: 500, marginTop: '2px', color: '#D81B60' }}>
-                   (minimal pembelian 2pcs item yang sama)
-                 </span>
+                 otomatis discount -20rb apabila membeli item yang sama atau tulis harga reseller minimal 4. kecuali item shoulder rest
                </div>
              )}
           </div>
