@@ -9,12 +9,15 @@ const FeedCard = ({ product }) => {
   const carouselRef = useRef(null);
   const { addToCart, wishlist, toggleWishlist } = useAppContext();
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [isAdded, setIsAdded] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(() => {
     if (Array.isArray(product.variants) && product.variants.length > 0) {
       return product.variants[0];
     }
     return product.sizeCategory || 'All Size';
   });
+
+  const isFavorited = wishlist ? wishlist.some(item => item.id === product.id) : false;
 
   const handleShareWA = (e) => {
     e.stopPropagation();
