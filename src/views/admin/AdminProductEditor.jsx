@@ -128,7 +128,10 @@ const AdminProductEditor = () => {
         setCategory(existingProduct.category || 'Bags');
         setSizeCategory(existingProduct.sizeCategory || '');
         setDimensions(existingProduct.dimensions || '');
-        setVariantsInput(Array.isArray(existingProduct.variants) ? existingProduct.variants.join(', ') : (existingProduct.variants || ''));
+        const existingVariants = (existingProduct.variants && existingProduct.variants.length > 0) 
+          ? existingProduct.variants 
+          : (existingProduct.preorderInfo?.variants || []);
+        setVariantsInput(Array.isArray(existingVariants) ? existingVariants.join(', ') : (existingVariants || ''));
         setDescription(existingProduct.description || '');
         setBatch(existingProduct.preorderInfo?.batchNumber || '');
         setStatus(existingProduct.preorderInfo?.status || 'Open');
@@ -162,7 +165,8 @@ const AdminProductEditor = () => {
         batchNumber: batch || '1',
         status: status,
         joinedCount: existingProduct?.preorderInfo?.joinedCount || 0,
-        endDate: '2026-12-31'
+        endDate: '2026-12-31',
+        variants: variantsInput ? variantsInput.split(',').map(v => v.trim()).filter(Boolean) : []
       }
     };
     

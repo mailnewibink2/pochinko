@@ -10,12 +10,12 @@ const FeedCard = ({ product }) => {
   const { addToCart, wishlist, toggleWishlist } = useAppContext();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState(() => {
-    if (Array.isArray(product.variants) && product.variants.length > 0) {
-      return product.variants[0];
-    }
-    return product.sizeCategory || 'All Size';
-  });
+  const productVariants = (Array.isArray(product.variants) && product.variants.length > 0) 
+    ? product.variants 
+    : (Array.isArray(product.preorderInfo?.variants) ? product.preorderInfo.variants : []);
+
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showVariantWarning, setShowVariantWarning] = useState(false);
 
   const isFavorited = wishlist ? wishlist.some(item => item.id === product.id) : false;
 
@@ -32,7 +32,12 @@ const FeedCard = ({ product }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart(product, selectedVariant, 1);
+    if (productVariants.length > 0 && !selectedVariant) {
+      setShowVariantWarning(true);
+      setTimeout(() => setShowVariantWarning(false), 3000);
+      return;
+    }
+    addToCart(product, selectedVariant || product.sizeCategory || 'All Size', 1);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -221,22 +226,30 @@ const FeedCard = ({ product }) => {
           </div>
         )}
 
-        {Array.isArray(product.variants) && product.variants.length > 0 && (
+        {productVariants.length > 0 && (
           <div style={{ margin: '8px 0 12px 0' }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>
-              Pilih Varian: <span style={{ color: '#5700ff' }}>{selectedVariant}</span>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>Pilih Varian <span style={{ color: '#ff4d4f' }}>*</span>:</span>
+              {selectedVariant ? (
+                <span style={{ color: '#5700ff', fontWeight: 700 }}>{selectedVariant}</span>
+              ) : (
+                <span style={{ color: '#ff4d4f', fontSize: '11px', fontWeight: 600 }}>Wajib dipilih</span>
+              )}
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              {product.variants.map((v, i) => (
+              {productVariants.map((v, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => setSelectedVariant(v)}
+                  onClick={() => {
+                    setSelectedVariant(v);
+                    setShowVariantWarning(false);
+                  }}
                   style={{
-                    padding: '4px 12px',
+                    padding: '6px 14px',
                     borderRadius: '16px',
-                    border: selectedVariant === v ? '1.5px solid #5700ff' : '1px solid #e0e0e0',
-                    background: selectedVariant === v ? '#F7F4FF' : 'white',
+                    border: selectedVariant === v ? '2px solid #5700ff' : (showVariantWarning ? '1.5px solid #ff4d4f' : '1px solid #d9d5e3'),
+                    background: selectedVariant === v ? '#F7F4FF' : (showVariantWarning ? '#FFF1F0' : 'white'),
                     color: selectedVariant === v ? '#5700ff' : '#2d2a36',
                     fontSize: '12px',
                     fontWeight: selectedVariant === v ? 700 : 500,
@@ -248,6 +261,11 @@ const FeedCard = ({ product }) => {
                 </button>
               ))}
             </div>
+            {showVariantWarning && (
+              <div style={{ color: '#ff4d4f', fontSize: '11px', fontWeight: 700, marginTop: '6px' }}>
+                ⚠️ Harap pilih salah satu varian terlebih dahulu!
+              </div>
+            )}
           </div>
         )}
 
