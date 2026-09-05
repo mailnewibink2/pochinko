@@ -90,7 +90,7 @@ const ProductDetailView = () => {
              <div className="text-lg" style={{ color: 'var(--text-primary)', fontWeight: 800 }}>
                Rp{(product.price || 0).toLocaleString('id-ID')}
              </div>
-             {product.name && !product.name.toLowerCase().includes('shoulder rest') && product.category?.toLowerCase() !== 'accessories' && (
+             {product.name && !product.name.toLowerCase().includes('shoulder rest') && (
                <div style={{ fontSize: '12px', color: '#E91E63', fontWeight: 600, marginTop: '8px', lineHeight: 1.4, padding: '8px 12px', background: '#FCE4EC', borderRadius: '8px' }}>
                  Harga Reseller Rp{Math.max(0, (product.price || 0) - 20000).toLocaleString('id-ID')}
                  <span style={{ display: 'block', fontSize: '11px', fontWeight: 500, marginTop: '2px', color: '#D81B60' }}>
